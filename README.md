@@ -12,17 +12,26 @@ Syntax
 If you have a data frame called Mydata, and you want the CI around the mean of Income:
 `simpleboot(Mydata$Income , "mean")`
 
-This works for any R function that takes a single argument and returns a single value. (but see To-Do List below) In my experience, students will use this for:
+This works for any R function that takes a single argument and returns a single value. (but see To-Do List below) In my experience, students will use this for means, medians, standard deviations, etc. So, these are the functions available to you:
 `simpleboot(Mydata$Income , "mean")
 simpleboot(Mydata$Income , "median")
 simpleboot(Mydata$Income , "sd")
 simpleboot(Mydata$Income , "IQR")`
+
+Also, I added some that are not functions in base R:
+`simpleboot(Mydata$Income,Mydata$Anxiety,"pearson")
+simpleboot(Mydata$Income,Mydata$Anxiety,"spearman")
+simpleboot(Mydata$Income,"p25")
+simpleboot(Mydata$Income,"p75")
+simpleboot(Mydata$Income,"iqr")`
+
+That gives you the Pearson correlation, the Spearman correlation, the 1st and 3rd quartiles, and the inter-quartile range (which just duplicates IQR())
 
 You might not notice if you use this inside R Commander, but a histogram of the empirical distribution function is drawn in the R window.
 
 To-Do List
 ----------
 
-* I intend to add two-variable functionality soon, for correlations mainly.
 * Also, to pass more arguments to the function call (e.g. simpleboot(Mydata$Income , "mean", "na.rm=TRUE"))
-* Perhaps include some asymptotic formulas too, then wrap it all up in a Rcmdr plug-in
+* Perhaps include some asymptotic formulas too
+* Then wrap it all up in a Rcmdr plug-in
