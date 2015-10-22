@@ -26,7 +26,7 @@ Also, I added some that are not functions in base R:
 `simpleboot(Mydata$Income,"p25")`
 `simpleboot(Mydata$Income,"p75")`
 `simpleboot(Mydata$Income,"iqr")`
-`simpleboot(Mydata$Income,"quantile", prob = 0.2)`
+`simpleboot(Mydata$Income,"quantile", probs = 0.2)`
 `simpleboot(Mydata$Income,Mydata$Anxiety,"meandiff")`
 `simpleboot(Mydata$Income,Mydata$Anxiety,"mediandiff")`
 
@@ -37,6 +37,5 @@ You might not notice if you use this inside R Commander, but a histogram of the 
 To-Do List
 ----------
 
-* Also, to pass more arguments to the function call (e.g. simpleboot(Mydata$Income , "quantile", "probs=0.1"))
 * Perhaps include some asymptotic formulas too
 * Then wrap it all up in a Rcmdr plug-in
