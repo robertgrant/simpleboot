@@ -26,10 +26,11 @@ Also, I added some that are not functions in base R:
 `simpleboot(Mydata$Income,"p25")`
 `simpleboot(Mydata$Income,"p75")`
 `simpleboot(Mydata$Income,"iqr")`
+`simpleboot(Mydata$Income,"quantile", prob = 0.2)`
 `simpleboot(Mydata$Income,Mydata$Anxiety,"meandiff")`
 `simpleboot(Mydata$Income,Mydata$Anxiety,"mediandiff")`
 
-That gives you the Pearson correlation, the Spearman correlation, the 1st and 3rd quartiles, the inter-quartile range (which just duplicates IQR()), the difference in means and the difference in medians.
+That gives you the Pearson correlation, the Spearman correlation, the 1st and 3rd quartiles, the inter-quartile range (which just duplicates IQR()), the 20th percentile (0.2 quantile), the difference in means and the difference in medians.
 
 You might not notice if you use this inside R Commander, but a histogram of the empirical distribution function is drawn in the R window.
 
