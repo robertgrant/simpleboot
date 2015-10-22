@@ -4,8 +4,8 @@ simpleboot<-function(x,y=NULL,stat,reps=1000) {
   cat("Check results closely and be prepared to consult a statistician.\n")
   if(stat=="max" | stat=="min") { warning("Bootstrap is likely to be incorrect for minima and maxima") }
   if(stat!="mean" & stat!="median" & stat!="p25" & stat!="p75" & stat!="iqr" & 
-     stat!="sd" & stat!="pearson" & stat!="spearman") {
-        warning("Simpleboot is only programmed to work with stat set to one of: mean, median, sd, iqr, p25, p75, pearson, spearman. Other functions might work, but there's no guarantee!")
+     stat!="sd" & stat!="pearson" & stat!="spearman" & stat!="meandiff" & stat!="mediandiff") {
+        warning("Simpleboot is only programmed to work with stat set to one of: mean, median, sd, iqr, p25, p75, pearson, spearman, meandiff, mediandiff. Other functions might work, but there's no guarantee!")
   }
   require(boot)
   if(stat=="p25") {
@@ -20,6 +20,12 @@ simpleboot<-function(x,y=NULL,stat,reps=1000) {
   else if(stat=="pearson" | stat=="spearman") {
     x<-matrix(c(x,y),ncol=2)[(!is.na(x))&(!is.na(y)),]
     eval(parse(text=eval(substitute(paste("p.func<-function(x,i) cor(x[i,],use='complete',method='",stat,"')[1,2]",sep=""),list(stat=stat)))))
+  }
+  else if(stat=="meandiff"){
+    eval(parse(text=eval(substitute(paste("p.func<-function(x,i) mean(x[i])-mean(y[i])",sep=""),list(stat=stat)))))
+  }
+  else if(stat=="mediandiff"){
+    eval(parse(text=eval(substitute(paste("p.func<-function(x,i) median(x[i])-median(y[i])",sep=""),list(stat=stat)))))
   }
   else {
     eval(parse(text=eval(substitute(paste("p.func<-function(x,i) ",stat,"(x[i],na.rm=TRUE)",sep=""),list(stat=stat)))))
