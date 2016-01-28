@@ -30,7 +30,7 @@ Also, I added some that are not functions in base R:
 `simpleboot(Mydata$Income,Mydata$Anxiety,"meandiff")`
 `simpleboot(Mydata$Income,Mydata$Anxiety,"mediandiff")`
 
-That gives you the Pearson correlation, the Spearman correlation, the 1st and 3rd quartiles, the inter-quartile range (which just duplicates IQR()), the 20th percentile (0.2 quantile), the difference in means and the difference in medians.
+That gives you the Pearson correlation, the Spearman correlation, the 1st and 3rd quartiles, the inter-quartile range (which just duplicates IQR()), the 20th percentile (0.2 quantile), the difference in means and the difference in medians. Note that the differences are not 'paired', that's to say it is the mean of x minus the mean of y, so missing data are removed individually and not pairwise. If you want it paired, make a new variable that is the difference and then use mean or median on that!
 
 You might not notice if you use this inside R Commander, but a histogram of the empirical distribution function is drawn in the R window.
 
