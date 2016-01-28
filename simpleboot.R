@@ -30,10 +30,10 @@ simpleboot<-function(x,y=NULL,stat, probs = NULL, reps=1000) {
     eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) cor(x[i,],use='complete',method='",stat,"')[1,2]"),list(stat=stat)))))
   }
   else if(stat=="meandiff"){
-    eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) mean(x[i])-mean(y[i])"),list(stat=stat)))))
+    eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) mean(x[i],na.rm=TRUE)-mean(y[i],na.rm=TRUE)"),list(stat=stat)))))
   }
   else if(stat=="mediandiff"){
-    eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) median(x[i])-median(y[i])"),list(stat=stat)))))
+    eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) median(x[i],na.rm=TRUE)-median(y[i],na.rm=TRUE)"),list(stat=stat)))))
   }
   else {
     eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) ",stat,"(x[i],na.rm=TRUE)"),list(stat=stat)))))
