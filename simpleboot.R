@@ -1,18 +1,26 @@
-simpleboot<-function(x,y=NULL,stat, probs = NULL, reps=1000) {
-  cat("Bootstrapping can go wrong!\n")
-  cat("This simple function will not show you warning messages.\n")
-  cat("Check results closely and be prepared to consult a statistician.\n")
-  if(stat=="max" | stat=="min") { warning("Bootstrap is likely to be incorrect for minima and maxima") }
-  if(stat!="mean" & stat!="median" & stat!="p25" & stat!="p75" & stat!="iqr" & stat!="quantile" &
-     stat!="sd" & stat!="pearson" & stat!="spearman" & stat!="meandiff" & stat!="mediandiff") {
-        warning("Simpleboot is only programmed to work with stat set to one of: mean, median, sd, iqr, p25, p75, quantile, pearson, spearman, meandiff, mediandiff. Other functions might work, but there's no guarantee!")
+simpleboot<-function(x,y=NULL,stat=NULL,probs=NULL,reps=1000,noisy=TRUE,ncpus=1,all.cis=TRUE) {
+  if(noisy){
+    cat("Bootstrapping can go wrong! ")
+    cat("This simple function will not show you warning messages.\n")
+    cat("Check results closely and be prepared to consult a statistician. ")
+    cat("For example, CIs should contain the point estimate and not extend into impossible values\n")
+    if(is.null(stat) & is.character(y)) {
+      stat<-y
+      y<-NULL
+    }
+    if(stat=="max" | stat=="min") { warning("Bootstrap does not work for minima and maxima (think about it)") }
+    if(stat!="mean" & stat!="median" & stat!="p25" & stat!="p75" & stat!="iqr" &
+      stat!="sd" & stat!="pearson" & stat!="spearman") {
+          warning("Simpleboot is only programmed to work with stat set to one of: mean, median, sd, iqr, p25, p75, pearson, spearman, meandiff, mediandiff. Other functions might work, but there's no guarantee!")
+    }
   }
-  if(stat == "quantile" & (probs <= 0 | probs > 1)){
-    stop("Quantile values must be greater than zero and less than one.")
-    
-  }
+  # set up multicore if ncpus>1
+  multicore<-(ncpus>1)
 
-  require(boot)
+  # install boot if not in library
+  if(!(require(boot))) {
+    install.packages('boot')
+  }
   if(stat=="p25") {
     eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) quantile(x[i],probs=0.25,na.rm=TRUE)"),list(stat=stat)))))
   }
@@ -38,9 +46,28 @@ simpleboot<-function(x,y=NULL,stat, probs = NULL, reps=1000) {
   else {
     eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) ",stat,"(x[i],na.rm=TRUE)"),list(stat=stat)))))
   }
-  bootsy<-boot(x,statistic=p.func,R=reps,stype="i")
-  hist(bootsy$t,breaks=25,main="EDF from bootstrap",xlab=stat)
-  suppressWarnings(return(list(replicates=reps,point.estimate=bootsy$t0,normal.ci=c(boot.ci(bootsy)$normal[2],boot.ci(bootsy)$normal[3]),
-                               percent.ci=c(boot.ci(bootsy)$percent[4],boot.ci(bootsy)$percent[5]),
-                               bca.ci=c(boot.ci(bootsy)$bca[4],boot.ci(bootsy)$bca[5]))))
+  if(multicore) {
+    bootsy<-boot(x,statistic=p.func,R=reps,stype="i",parallel='multicore',ncpus=ncpus)
+  }
+  else {
+    bootsy<-boot(x,statistic=p.func,R=reps,stype="i")
+  }
+  if(noisy){
+    hist(bootsy$t,breaks=25,main="EDF from bootstrap",xlab=stat)
+  }
+  if(all.cis) {
+    temp<-boot.ci(bootsy,type=c('norm','perc','bca'))
+    suppressWarnings(return(list(replicates=reps,
+                                 point.estimate=bootsy$t0,
+                                 normal.ci=temp$normal[2:3],
+                                 percent.ci=temp$percent[4:5],
+                                 bca.ci=temp$bca[4:5])))
+  }
+  else {
+    temp<-boot.ci(bootsy,type=c('perc'))
+    suppressWarnings(return(list(replicates=reps,
+                                 point.estimate=bootsy$t0,
+                                 percent.ci=temp$percent[4:5])))
+  }
+
 }
