@@ -30,7 +30,7 @@ simpleboot<-function(x,y=NULL,stat=NULL,probs=NULL,reps=1000,noisy=TRUE,ncpus=1,
   else if(stat=="iqr") {
     eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) quantile(x[i],probs=0.75,na.rm=TRUE)-quantile(x[i],probs=0.25,na.rm=TRUE)"),list(stat=stat)))))
   }
-  else if(stat=="quantile" & prob ) {
+  else if(stat=="quantile") {
     eval(parse(text=eval(substitute(paste0("p.func<-function(x,i) quantile(x[i],probs=",probs,",na.rm=TRUE)"),list(stat=stat)))))
   }
   else if(stat=="pearson" | stat=="spearman") {

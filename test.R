@@ -72,3 +72,17 @@ for(s in thestats) {
   }
   statn<-statn+1
 }
+
+# draw charts
+ncis<-(dim(res)[2]-6)/2
+# loop over stats
+for(i in 1:(dim(res)[1])) {
+  # draw point estimate
+  plot(x=0,y=res[i,2],xlim=c(0,ncis),ylim=range(res[i,3:(dim(res)[2]-4)]),
+       main=res[i,1],cex=1.6,col='#f74a62')
+  # loop over CIs
+  for(j in 1:ncis) {
+    thisci<-c(1,2)+(2*j)
+    lines(x=c(j,j),y=res[i,thisci],col='#42566f')
+  }
+}
