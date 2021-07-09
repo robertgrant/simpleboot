@@ -61,13 +61,15 @@ simpleboot<-function(x,y=NULL,stat=NULL,probs=NULL,reps=1000,noisy=TRUE,ncpus=1,
                                  point.estimate=bootsy$t0,
                                  normal.ci=temp$normal[2:3],
                                  percent.ci=temp$percent[4:5],
-                                 bca.ci=temp$bca[4:5])))
+                                 bca.ci=temp$bca[4:5],
+                                 edf=as.vector(bootsy$t))))
   }
   else {
     temp<-boot.ci(bootsy,type=c('perc'))
     suppressWarnings(return(list(replicates=reps,
                                  point.estimate=bootsy$t0,
-                                 percent.ci=temp$percent[4:5])))
+                                 percent.ci=temp$percent[4:5],
+                                 edf=as.vector(bootsy$t))))
   }
 
 }
